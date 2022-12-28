@@ -1,1 +1,1 @@
-# flask-sqlite-crud-interface
+# Flask-SQLite CRUD interface

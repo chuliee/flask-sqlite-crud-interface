@@ -1,0 +1,33 @@
+{% extends "layout.html" -%}
+{%- block title %}Home{% endblock -%}
+{%- block body -%}
+<h1>Home</h1>
+<h3>Technical Support</h3>
+<p>
+    If you have any difficulties operating the robot, please contact the department in charge.
+</p>
+<hr/>
+<div>
+    <table style="text-align:left;">
+        <tr>
+            <th style="padding-right:10px;">Department</th>
+            <td>Construction Automation Team, Research Division</td>
+        </tr>
+        <tr>
+            <th>Manager</th>
+            <td>Namcheol Jung</td>
+        </tr>
+        <tr>
+            <th>Tel.</th>
+            <td>02 - 746 - 3980</td>
+        </tr>
+        <tr>
+            <th>E-mail</th>
+            <td>njung@hdec.co.kr</td>
+        </tr>
+    </table>
+</div>
+<script>
+    document.getElementById("nav-btn-home").classList.add('nav-btn-selected');
+</script>
+{%- endblock %}
