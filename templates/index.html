@@ -1,33 +1,37 @@
-{% extends "layout.html" -%}
-{%- block title %}Home{% endblock -%}
-{%- block body -%}
-<h1>Home</h1>
-<h3>Technical Support</h3>
-<p>
-    If you have any difficulties operating the robot, please contact the department in charge.
-</p>
-<hr/>
-<div>
-    <table style="text-align:left;">
-        <tr>
-            <th style="padding-right:10px;">Department</th>
-            <td>Construction Automation Team, Research Division</td>
-        </tr>
-        <tr>
-            <th>Manager</th>
-            <td>Namcheol Jung</td>
-        </tr>
-        <tr>
-            <th>Tel.</th>
-            <td>02 - 746 - 3980</td>
-        </tr>
-        <tr>
-            <th>E-mail</th>
-            <td>njung@hdec.co.kr</td>
-        </tr>
-    </table>
-</div>
-<script>
-    document.getElementById("nav-btn-home").classList.add('nav-btn-selected');
-</script>
-{%- endblock %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Flask-SQLite DBMS</title>
+    </head>
+    <style>
+        .console-div{
+            border: solid 1px #3300aa;
+            color: #3300aa;
+            
+        }
+        .query-div{
+            border: solid 1px #aa00aa;
+            color: #aa00aa;
+
+        }
+        thead{
+            font-weight: bold;
+        }
+        td{
+            padding: 2px;
+        }
+        input{
+            border: 1px solid #333333;
+            height: 20px;
+            padding: 2px;
+        }
+    </style>
+    <body>
+         <h1>Flask-SQLite DBMS</h1>
+         <div class="query=div">{{ query }}</div>
+         <div class="console-div">{{ console_msg }}</div>
+    </body>
+    <script>
+        
+    </script>
+</html>
