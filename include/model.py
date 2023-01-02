@@ -1,20 +1,14 @@
 import sqlite3
+import table_structure
 from werkzeug.security import generate_password_hash, check_password_hash
 
 create = True
 insert = False
 update = False
 
-table = { # Table name {column: type}
-    # 'Users': {
-    #     'id': 'integer PRIMARY KEY NOT NULL',
-    #     'username': 'text NOT NULL',
-    #     'password': 'text NOT NULL'
-    # },
-    'EnvSensor': ''
-}
+table = table_structure.table
 values = []
-values.append(['Users', ['1', '"admin"', '"' + generate_password_hash('admin') + '"']])
+# values.append(['Users', ['1', '"admin"', '"' + generate_password_hash('admin') + '"']])
 
 # Create Database Client
 conn = sqlite3.connect('../database.db')
@@ -28,23 +22,22 @@ if create:
     # Create Tables
     # conn.execute('CREATE TABLE {TABLE} ({COLUMN} {TYPE});')
     for k1, v1 in table.items():
-        # query = ""
-        # query_count = query_count + 1
-        # try:
-        #     query = 'CREATE TABLE {0} ('.format(k1)
-        #     temp = []
-        #     for k2, v2 in v1.items():
-        #         temp.append('{0} {1}'.format(k2, v2))
-        #     query = query + ', '.join(temp)        
-        #     query = query + ');'
-        # query = 'CREATE TABLE EnvSensor (id INTEGER PRIMARY KEY AUTOINCREMENT, robot_id TEXT NOT NULL, lux REAL, temperature REAL, humidity REAL, noise REAL, co REAL);'
-        query = 'INSERT INTO EnvSensor(robot_id, lux, temperature, humidity, noise, co) VALUES ("sp0002", 15123.2, 11.2, 54, 114.2, 3.3);'
-        conn.execute(query)
-        print(query_count, 'COMPLETE:', query)
-        query_success = query_success + 1
-        # except Exception as e:
-        #     print(query_count, 'ERROR:', e, query)
-        #     query_fail = query_fail + 1
+        query = ''
+        query_count = query_count + 1
+        try:
+            query = 'CREATE TABLE {0} ('.format(k1)
+            temp = []
+            for k2, v2 in v1.items():
+                temp.append('{0} {1}'.format(k2, v2))
+            query = query + ', '.join(temp)        
+            query = query + ');'
+            conn.execute(query)
+            print(query_count, 'COMPLETE:', query)
+            query_success = query_success + 1
+
+        except Exception as e:
+            print(query_count, 'ERROR:', e, query)
+            query_fail = query_fail + 1
 
 if insert:
     # Insert Values

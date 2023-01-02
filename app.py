@@ -3,11 +3,13 @@
 import json
 import os
 import sqlite3
+import include.table_structure as table_structure
 from flask import Flask, render_template, request, redirect, url_for
 
 host = '0.0.0.0'
 port = 7801
 debug = True
+tables = table_structure.table
 
 app = Flask(__name__)
 
@@ -54,11 +56,26 @@ def favicon():
 def index():
     return render_template('index.html')
 
-## CRUD REST API
-@app.route('/table')
-def table():
-    return render_template('table.html')
+## Table Management
+@app.route('/table_status')
+def table_status():
+    table_list = []
+    for k, v in tables.items():
+        table_columns = []
+        for column in v.keys():
+            table_columns.append(column)
+        table_list.append([k, table_columns])
+    return render_template('/table_status.html', table_list=table_list)
 
+@app.route('/create_new_table')
+def create_new_table():
+    return render_template('/create_new_table.html')
+
+@app.route('/env_sensor_chart')
+def env_sensor_chart():
+    return render_template('/env_sensor_chart.html')
+
+## CRUD REST API
 @app.route('/execute_query', methods=['POST'])
 def execute_query():
     param = json.loads(request.get_data())
@@ -69,8 +86,8 @@ def execute_query():
 
 @app.route('/create')
 def create():
-    args = request.args.get()
-    return args
+    table_name = request.args.get("table")
+    return table_name
 
 
 app.run(host=host, port=port, debug=debug)

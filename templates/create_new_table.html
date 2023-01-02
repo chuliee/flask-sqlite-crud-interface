@@ -1,0 +1,100 @@
+{% extends "layout.html" -%}
+{%- block title %}Create New Table{% endblock -%}
+{%- block body -%}
+<h1>Table Management</h1>
+<h3>Create New Table</h3>
+<hr/>
+<div id="init-div">
+    <input id="table-name" type="text" value="" placeholder="Table Name">
+    <button onclick="init_table()">Init Table</button>
+</div>
+<div id="create-table-div" style="display:none;">
+    <div id="create-table-query" class="query-div"></div>
+    <br/>
+    <div style="text-align:right;">
+        <button onclick="add_row('create-table')">Add Field</button>
+        <button onclick="execute_query()">QUERY?</button>
+    </div>
+    <br/>
+    <table id="create-table" style="text-align:center;" onchange="create_table_update_query()">
+        <thead>
+            <td width="183px">Field Name</td>
+            <td width="93px">Type</td>
+            <td width="110px">Primary Key</td>
+            <td width="110px">Autoincrement</td>
+            <td width="110px">Not Null</td>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<script>
+    document.getElementById("nav-btn-create-new-table").classList.add('nav-btn-selected');
+    
+    var xhr = new XMLHttpRequest();
+    let QUERY = "";
+    let create_table_row_no = 0;
+    
+    function init_table(){
+        if(document.getElementById("table-name").value == ""){
+            alert("Input Table Name");
+        } else{
+            QUERY = "CREATE TABLE " + document.getElementById("table-name").value;
+            document.getElementById("create-table-query").innerHTML = QUERY;
+            document.getElementById("init-div").style.display = "none";
+            document.getElementById("create-table-div").style.display = "block";
+        }
+    }
+
+    function create_table_update_query(){
+        var QUERY_mod = QUERY + "(";
+        for(var i = 0;i < create_table_row_no;i++){
+            QUERY_mod = QUERY_mod + document.getElementById("create-table-field-" + String(i)).value;
+            QUERY_mod = QUERY_mod + " " + document.getElementById("create-table-type-" + String(i)).value;
+            if(document.getElementById("create-table-pk-" + String(i)).checked){QUERY_mod = QUERY_mod + " PRIMARY KEY";}
+            if(document.getElementById("create-table-auto-" + String(i)).checked){QUERY_mod = QUERY_mod + " AUTOINCREMENT";}
+            if(document.getElementById("create-table-nn-" + String(i)).checked){QUERY_mod = QUERY_mod + " NOT NULL";}
+            if(i == create_table_row_no - 1){QUERY_mod = QUERY_mod + ");";}
+            else{QUERY_mod = QUERY_mod + ", ";}
+        }
+        document.getElementById("create-table-query").innerHTML = QUERY_mod;
+    }
+
+    function add_row(table_id){
+        
+        const table = document.getElementById(table_id);
+        const newRow = table.insertRow();
+        const newCell1 = newRow.insertCell(0);
+        const newCell2 = newRow.insertCell(1);
+        const newCell3 = newRow.insertCell(2);
+        const newCell4 = newRow.insertCell(3);
+        const newCell5 = newRow.insertCell(4);
+
+        newCell1.innerHTML = '<input id="create-table-field-' + String(create_table_row_no) + '" type="text"">';
+        newCell2.innerHTML = '<select id="create-table-type-' + String(create_table_row_no) + '"><option value="TEXT">TEXT</option><option>NUMERIC</option><option value="INTEGER">INTEGER</option><option value="REAL">REAL</option><option value="NONE">NONE</option></select>'
+        newCell3.innerHTML = '<input id="create-table-pk-' + String(create_table_row_no) + '" type="checkbox">';
+        newCell4.innerHTML = '<input id="create-table-auto-' + String(create_table_row_no) + '" type="checkbox">';
+        newCell5.innerHTML = '<input id="create-table-nn-' + String(create_table_row_no) + '" type="checkbox">';
+
+        create_table_row_no++;
+        console.log(create_table_row_no)
+    }
+
+    function execute_query(){
+        url = "/execute_query"
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = () => {
+            if (xhr.status == 200 && xhr.readyState == xhr.DONE) {
+                var response = xhr.responseText;
+                console_div.style.display = "block";
+                console_div.innerHTML = "Console Message: " + response;
+            }
+        }
+        var data = {
+            "query": document.getElementById("create-table-query").innerHTML
+        };
+        xhr.send(JSON.stringify(data));
+    }
+</script>
+{%- endblock %}

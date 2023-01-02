@@ -51,6 +51,16 @@ body{
     background-color: #0080ff;
     color: #ffffff;
 }
+.nav-category{
+    border-bottom: solid 1px #0080ff;
+    color: #ffffff;
+    display: block;
+    font-weight: bold;
+    line-height: 40px;
+    margin-top: 15px;
+    padding-left: 10px;
+    text-decoration: none;
+}
 .content{
     left: 200px;
     width: calc(100vw - 277px);
@@ -136,6 +146,9 @@ select{
     border: 1px solid #333333;
     height: 26px;
     padding: 2px;
+}
+button{
+    height: 26px;
 }
 @media screen and (max-width: 768px) {
     .nav{
