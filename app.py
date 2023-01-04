@@ -1,5 +1,6 @@
 # ⓒ 2022 Namcheol Jung <namcheoljung@naver.com>
 # MIT License
+import database_manager
 import json
 import os
 import sqlite3
@@ -11,6 +12,13 @@ debug = True
 database = 'chinook.db'
 
 app = Flask(__name__)
+
+table_dict = {
+    'table_name': 'sample',
+    'c': 'c'
+}
+
+DB = database_manager.DatabaseClient(os.path.join(os.path.dirname(__file__), database))
 
 ## SQLite Application
 def confirm_result():
@@ -51,14 +59,26 @@ def db_execute_query(query):
 def favicon():
     return 'data:;base64,iVBORw0KGgo='
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    return render_template('index.html', console_msg='Welcome!')
 
 ## CRUD REST API
 @app.route('/table')
 def table():
-    return render_template('table.html')
+    data = DB.read({'table': 'albums', 'columns': '*', 'options': 'ORDER BY AlbumId DESC'})
+    param = {
+        'table_name': 'albums',
+        'query': data[1],
+        'table_rows': data[0],
+        'request': '/table'
+    }
+    
+    table_name = param['table_name']
+    query = param['query']
+    table_rows = param['table_rows']
+    console_msg = 'REQUEST FROM ' + param['request']
+    return render_template('index.html', table_name=table_name, query=query, table_rows=table_rows, console_msg=console_msg)
 
 @app.route('/execute_query', methods=['POST'])
 def execute_query():

@@ -7,18 +7,29 @@
         .console-div{
             border: solid 1px #3300aa;
             color: #3300aa;
-            
+            font-size: 11px;
+            line-height: 14px;
+            margin: 1px;
+            padding: 5px;
         }
         .query-div{
             border: solid 1px #aa00aa;
             color: #aa00aa;
-
+            font-size: 11px;
+            line-height: 14px;
+            margin: 1px;
+            padding: 5px;
+        }
+        table{
+            border-collapse: collapse;
         }
         thead{
             font-weight: bold;
         }
         td{
-            padding: 2px;
+            border: solid 1px #333333;
+            font-size: 14px;
+            padding: 1px;
         }
         input{
             border: 1px solid #333333;
@@ -28,10 +39,31 @@
     </style>
     <body>
          <h1>Flask-SQLite DBMS</h1>
-         <div class="query=div">{{ query }}</div>
-         <div class="console-div">{{ console_msg }}</div>
+         <hr/>
+         {% if query -%}<div class="query-div">{{ query }}</div>{%- endif %}
+         {% if console_msg -%}<div class="console-div">{{ console_msg }}</div>{%- endif %}
+         {% if table_name -%}
+            <h2>{{ table_name }}</h2>
+         {%- endif %}
+         {% if table_rows -%}
+            <table>
+                <thead>
+                    <td></td>
+                </thead>
+                <tbody>
+                    {% for row in table_rows -%}
+                        <tr>
+                        {% for datum in row -%}
+                            <td>{{ datum }}</td>
+                        {%- endfor %}
+                        </tr>
+                    {%- endfor %}
+                </tbody>
+            </table>
+         {%- endif %}
     </body>
     <script>
+        
         
     </script>
 </html>
