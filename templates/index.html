@@ -29,7 +29,8 @@
         td{
             border: solid 1px #333333;
             font-size: 14px;
-            padding: 1px;
+            padding: 4px;
+            text-align: center;
         }
         input{
             border: 1px solid #333333;
@@ -48,7 +49,9 @@
          {% if table_rows -%}
             <table>
                 <thead>
-                    <td></td>
+                    {% for column in table_columns -%}
+                        <td>{{ column }}</td>
+                    {%- endfor %}
                 </thead>
                 <tbody>
                     {% for row in table_rows -%}

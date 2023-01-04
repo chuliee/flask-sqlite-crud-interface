@@ -9,15 +9,9 @@ from flask import Flask, render_template, request, redirect, url_for
 host = '0.0.0.0'
 port = 7801
 debug = True
-database = 'chinook.db'
-
+# database = 'chinook.db'
+database = 'database.db'
 app = Flask(__name__)
-
-table_dict = {
-    'table_name': 'sample',
-    'c': 'c'
-}
-
 DB = database_manager.DatabaseClient(os.path.join(os.path.dirname(__file__), database))
 
 ## SQLite Application
@@ -59,26 +53,43 @@ def db_execute_query(query):
 def favicon():
     return 'data:;base64,iVBORw0KGgo='
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
-    return render_template('index.html', console_msg='Welcome!')
+    return render_template('index.html')
 
 ## CRUD REST API
-@app.route('/table')
-def table():
-    data = DB.read({'table': 'albums', 'columns': '*', 'options': 'ORDER BY AlbumId DESC'})
-    param = {
-        'table_name': 'albums',
-        'query': data[1],
-        'table_rows': data[0],
-        'request': '/table'
-    }
-    
-    table_name = param['table_name']
-    query = param['query']
-    table_rows = param['table_rows']
-    console_msg = 'REQUEST FROM ' + param['request']
-    return render_template('index.html', table_name=table_name, query=query, table_rows=table_rows, console_msg=console_msg)
+@app.route('/create/<table>')
+def create(table):
+    try:
+        columns, _ = DB.columns({'table': table})
+        columns_mod = []
+        values = []
+        for column in columns:
+            value = request.args.get(column)
+            if value != None:
+                try:
+                    float(value)
+                except:
+                    value = '"' + value + '"'            
+                values.append(value)
+                columns_mod.append(column)
+        table_dict = {'table': table, 'columns': columns_mod, 'values': values, 'options': None}
+        _, query = DB.create(table_dict)
+        data, _ = DB.read({'table': table, 'columns': '*', 'values': None, 'options': None})
+        return render_template('index.html', table_name=table, table_columns=columns, table_rows=data, query=query, console_msg="COMPLETE CREATE")
+    except Exception as e:
+        return render_template('index.html', console_msg='[ERROR] ' + str(e))
+
+@app.route('/read/<table>')
+def read(table):
+    try:
+        options = request.args.get('options')
+        data, query = DB.read({'table': table, 'columns': '*', 'values': None, 'options': options})
+        print(data)
+        columns, _ = DB.columns({'table': table})
+        return render_template('index.html', table_name=table, table_columns=columns, table_rows=data, query=query, console_msg="COMPLETE READ")
+    except Exception as e:
+        return render_template('index.html', console_msg='[ERROR] ' + str(e))
 
 @app.route('/execute_query', methods=['POST'])
 def execute_query():
@@ -87,11 +98,5 @@ def execute_query():
     response = db_execute_query(query)
     confirm_result()
     return response
-
-@app.route('/create')
-def create():
-    args = request.args.get()
-    return args
-
 
 app.run(host=host, port=port, debug=debug)
